@@ -29,6 +29,8 @@ ALLOWED_HOSTS = [
     'localhost'
 ]
 
+CORS_ALLOWED_ORIGINS = ['http://localhost:4200']
+
 
 # Application definition
 
@@ -52,6 +54,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
