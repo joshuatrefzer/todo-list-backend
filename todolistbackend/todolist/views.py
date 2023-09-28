@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import status
 from rest_framework.authtoken.views import ObtainAuthToken, APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -19,6 +20,41 @@ class TodoItemView(APIView):    #Klasse nennen wie model!
         todos = TodoItem.objects.filter(author=request.user)
         serializer = TodoItemSerializer(todos, many=True)
         return Response(serializer.data)
+    
+    
+    # ??????
+    def delete(self, request, pk, format=None):
+        try:
+            todo = TodoItem.objects.get(id=pk)
+            todo.delete()
+        except TodoItem.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+    def patch(self, request, pk, format=None):
+        todo = self.get_object(pk)
+        serializer = TodoItemSerializer(todo, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+    #klappt
+    def post(self, request, format=None):
+        serializer = TodoItemSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save(author=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+
 
 
 class LoginView(ObtainAuthToken):
