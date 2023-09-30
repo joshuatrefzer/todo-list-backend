@@ -9,3 +9,7 @@ class TodoItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('author' ,)
     
+        # def update(self, instance, validated_data):
+        #     instance.title = validated_data.get('title', instance.title)
+        #     instance.save()
+        #     return instance

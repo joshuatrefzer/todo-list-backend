@@ -31,6 +31,15 @@ ALLOWED_HOSTS = [
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:4200']
 
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',  # Füge hier PATCH hinzu
+    'POST',
+    'PUT',
+]
+
 
 # Application definition
 
@@ -62,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'todolistbackend.urls'

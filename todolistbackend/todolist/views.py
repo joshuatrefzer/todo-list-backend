@@ -6,6 +6,9 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 from todolist.serializers import TodoItemSerializer
 
 from .models import TodoItem
@@ -34,9 +37,12 @@ class TodoItemView(APIView):    #Klasse nennen wie model!
 
 
     def patch(self, request, pk, format=None):
-        todo = self.get_object(pk)
-        serializer = TodoItemSerializer(todo, data=request.data, partial=True)
-
+        try:
+            todo = TodoItem.objects.get(id=pk)
+            serializer = TodoItemSerializer(todo, data=request.data, partial=True)
+        except TodoItem.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -53,7 +59,6 @@ class TodoItemView(APIView):    #Klasse nennen wie model!
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    
 
 
 
